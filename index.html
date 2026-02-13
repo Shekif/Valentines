@@ -92,38 +92,6 @@ body{
   z-index:5;
 }
 
-/* ================= MINI LETTER ================= */
-
-/* Fully hidden inside envelope */
-.peek-letter{
-  position:absolute;
-  bottom:-260px;  /* COMPLETELY hidden */
-  left:50%;
-  transform:translateX(-50%);
-  width:380px;
-  height:220px;
-  background:white;
-  border-radius:15px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:28px;
-  font-weight:bold;
-  color:#ff4d6d;
-  transition:bottom 1s ease;
-  cursor:pointer;
-
-  border:6px solid;
-  border-image:linear-gradient(to bottom, red, pink, white) 1;
-
-  z-index:3; /* between mail base and flap */
-}
-
-/* Peek position (like your red drawing) */
-.open .peek-letter{
-  bottom:40px; /* sits above seam */
-}
-
 /* ================= FULL LETTER ================= */
 
 .full-letter{
@@ -179,9 +147,6 @@ button{
 
 <div class="mail-container" id="mailBox">
   <div class="mail"></div>
-  <div class="peek-letter" id="peekLetter">
-    Heyy Mrembo
-  </div>
   <div class="flap"></div>
   <div class="badge">1</div>
 </div>
@@ -220,20 +185,19 @@ for(let i=0;i<40;i++){
   document.body.appendChild(heart);
 }
 
-/* Envelope open */
+/* Envelope open + auto show letter */
 let opened=false;
 
 document.getElementById("mailBox").onclick=function(){
   if(!opened){
     this.classList.add("open");
     opened=true;
-  }
-}
 
-/* Click mini letter */
-document.getElementById("peekLetter").onclick=function(e){
-  e.stopPropagation();
-  document.getElementById("fullLetter").style.display="block";
+    // show full letter after flap animation
+    setTimeout(()=>{
+      document.getElementById("fullLetter").style.display="block";
+    },1000);
+  }
 }
 
 /* No button runs */
@@ -247,7 +211,7 @@ function moveNo(){
 /* YES */
 function sayYes(){
   document.getElementById("celebrate").style.display="block";
-  document.getElementById("noBtn").style.display="none"; // remove No button
+  document.getElementById("noBtn").style.display="none";
   confetti({
     particleCount:200,
     spread:120,
