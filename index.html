@@ -3,181 +3,222 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For You ❤️</title>
+<title>You've Got Mail 💌</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-  background:#f4b6c2;
-  font-family:Arial, sans-serif;
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    background: #ffccd5;
+    height: 100vh;
 }
 
-/* HEARTS BACKGROUND */
-.hearts-container {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: hidden;
+/* Floating Hearts */
+.heart {
+    position: absolute;
+    bottom: -20px;
+    color: red;
+    animation: floatUp 8s linear infinite;
 }
 
-/* ENVELOPE */
-.envelope {
-  position: relative;
-  width: 200px;
-  height: 130px;
-  background: #e63946;
-  cursor: pointer;
-  z-index: 5;
-}
-
-.envelope::before {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 100px solid transparent;
-  border-right: 100px solid transparent;
-  border-bottom: 65px solid #c9184a;
-  top: -65px;
-  left: 0;
-  transform-origin: bottom;
-  transition: transform 0.6s ease;
-}
-
-.envelope.open::before {
-  transform: rotateX(180deg);
-}
-
-/* Notification bubble */
-.notification {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 30px;
-  height: 30px;
-  background: red;
-  color: white;
-  border-radius: 50%;
-  font-size: 14px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-}
-
-/* FULL LETTER */
-.letter-full {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  width: 85%;
-  max-width: 500px;
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-  opacity: 0;
-  z-index: -1;
-  transition: all 0.6s ease;
-}
-
-.letter-full.show {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-  z-index: 10;
-}
-
-.letter-full h2 {
-  color: #e63946;
-  margin-bottom: 15px;
-}
-
-.letter-full p {
-  color: #333;
-  line-height: 1.6;
-}
-
-/* HEART FLOAT ANIMATION */
 @keyframes floatUp {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100vh);
-    opacity: 0;
-  }
+    to {
+        transform: translateY(-110vh);
+        opacity: 0;
+    }
 }
+
+/* Mail Icon */
+.mail-container {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+.mail {
+    width: 120px;
+    height: 80px;
+    background: white;
+    position: relative;
+    border-radius: 10px;
+}
+
+.flap {
+    width: 0;
+    height: 0;
+    border-left: 60px solid transparent;
+    border-right: 60px solid transparent;
+    border-bottom: 50px solid #ff4d6d;
+    position: absolute;
+    top: -50px;
+    left: 0;
+    transition: transform 1s;
+    transform-origin: top;
+}
+
+.notification {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 25px;
+    font-weight: bold;
+}
+
+/* Letter */
+.letter {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px;
+    width: 70%;
+    max-width: 500px;
+    text-align: center;
+    border: 8px solid;
+    border-image: linear-gradient(to bottom, red, pink, white) 1;
+    border-radius: 15px;
+}
+
+.big-question {
+    font-size: 28px;
+    margin-top: 20px;
+}
+
+button {
+    margin: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#yesBtn {
+    background-color: #ff4d6d;
+    color: white;
+}
+
+#noBtn {
+    background-color: gray;
+    color: white;
+    position: relative;
+}
+
+/* Celebration */
+.celebrate {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    color: #ff006e;
+    display: none;
+}
+
+/* Confetti */
+.confetti {
+    position: absolute;
+    top: -10px;
+    width: 10px;
+    height: 10px;
+    background: red;
+    animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
 </style>
 </head>
-
 <body>
 
-<div class="hearts-container"></div>
-
-<div class="envelope" onclick="openEnvelope()">
-  <div class="notification" id="notif">1</div>
+<div class="mail-container" onclick="openMail()">
+    <div class="flap" id="flap"></div>
+    <div class="mail"></div>
+    <div class="notification">1</div>
 </div>
 
-<div class="letter-full" id="fullLetter">
-  <h2>Hey mrembo ❤️</h2>
-  <p>
-    From the moment you came into my life, everything has felt lighter, warmer,
-    and more meaningful. You make ordinary days feel special just by being you.
-  </p>
-  <p>
-    I just wanted to remind you how beautiful your heart is and how grateful I am
-    for you. 💕
-  </p>
+<div class="letter" id="letter">
+    <p>Heyy Mrembo,</p>
+    <p>
+        Words can’t describe how happy I am to have you in my life and get to spend time with you (we used to pray for times like these).  
+        Speaking of time, Valentine’s is coming up and I have one question for you...
+    </p>
+    <div class="big-question">Will you be my Valentine?</div>
+
+    <button id="yesBtn" onclick="sayYes()">Yes 💖</button>
+    <button id="noBtn" onmouseover="moveNo()">No 🙈</button>
+</div>
+
+<div class="celebrate" id="celebrate">
+    YAAAAAAY I'M SO EXCITED!!! 🎉💖
 </div>
 
 <script>
-/* OPEN ENVELOPE */
-function openEnvelope() {
-  const envelope = document.querySelector(".envelope");
-  const letter = document.getElementById("fullLetter");
-  const notif = document.getElementById("notif");
 
-  envelope.classList.add("open");
-  notif.style.display = "none";
-
-  setTimeout(() => {
-    letter.classList.add("show");
-  }, 1000);
+/* Open Mail */
+function openMail() {
+    document.getElementById("flap").style.transform = "rotateX(180deg)";
+    setTimeout(() => {
+        document.querySelector(".mail-container").style.display = "none";
+        document.getElementById("letter").style.display = "block";
+    }, 1000);
 }
 
-/* HEART GENERATOR */
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.innerHTML = Math.random() > 0.5 ? "❤️" : "💖";
-  heart.style.position = "absolute";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.bottom = "0px";
-  heart.style.fontSize = (15 + Math.random() * 30) + "px";
-  heart.style.animation = "floatUp 6s linear forwards";
-
-  document.querySelector(".hearts-container").appendChild(heart);
-
-  setTimeout(() => {
-    heart.remove();
-  }, 6000);
+/* Move No Button */
+function moveNo() {
+    let noBtn = document.getElementById("noBtn");
+    let x = Math.random() * 300 - 150;
+    let y = Math.random() * 200 - 100;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
 }
 
-setInterval(createHeart, 400);
+/* Yes Celebration */
+function sayYes() {
+    document.getElementById("celebrate").style.display = "block";
+    document.getElementById("noBtn").style.display = "none";
+
+    for (let i = 0; i < 100; i++) {
+        let confetti = document.createElement("div");
+        confetti.className = "confetti";
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.background = ["red","pink","white"][Math.floor(Math.random()*3)];
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3000);
+    }
+}
+
+/* Floating Hearts */
+function createHearts() {
+    setInterval(() => {
+        let heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "❤";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+        heart.style.color = ["#ff4d6d","#ff8fab","#ffffff"][Math.floor(Math.random()*3)];
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 8000);
+    }, 300);
+}
+
+createHearts();
+
 </script>
 
 </body>
