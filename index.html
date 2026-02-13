@@ -14,38 +14,38 @@ body{
   justify-content:center;
   align-items:center;
   overflow:hidden;
-  background:#f8c8dc;
+  background:#f4b6c2;
   font-family:Arial, sans-serif;
 }
 
-/* FLOATING HEARTS */
+/* Floating Hearts */
 .heart{
   position:absolute;
-  color:red;
   animation: floatUp linear infinite;
-  opacity:0.7;
+  opacity:0.8;
 }
 
 @keyframes floatUp{
   from{
-    transform:translateY(100vh) scale(0.5);
+    transform:translateY(100vh) scale(0.6);
     opacity:0;
   }
   to{
-    transform:translateY(-10vh) scale(1.2);
+    transform:translateY(-10vh) scale(1.3);
     opacity:1;
   }
 }
 
-/* Envelope container */
+/* Envelope Container */
 .mail-container{
   position:relative;
   width:450px;
   height:300px;
   cursor:pointer;
+  perspective:1000px;
 }
 
-/* Envelope base */
+/* Envelope Base */
 .mail{
   width:100%;
   height:100%;
@@ -53,23 +53,24 @@ body{
   border-radius:15px;
   position:absolute;
   bottom:0;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  box-shadow:0 15px 35px rgba(0,0,0,0.2);
 }
 
-/* Envelope flap */
+/* Flap */
 .flap{
   width:100%;
   height:50%;
-  background:#eee;
+  background:#e6e6e6;
   position:absolute;
   top:0;
   left:0;
   clip-path:polygon(0 0, 50% 100%, 100% 0);
   transform-origin:top;
   transition:transform 1s ease;
+  backface-visibility:hidden;
 }
 
-/* Flap open animation */
+/* Flap open */
 .open .flap{
   transform:rotateX(180deg);
 }
@@ -91,27 +92,31 @@ body{
   font-weight:bold;
 }
 
-/* Letter peeking */
+/* Peeking Letter (HIDDEN INITIALLY) */
 .peek-letter{
   position:absolute;
   bottom:0;
   left:50%;
-  transform:translateX(-50%);
+  transform:translate(-50%, 100%);
   width:380px;
   height:220px;
   background:white;
-  border-radius:10px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.2);
-  transition:transform 1s ease;
+  border-radius:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
   cursor:pointer;
+
+  border:6px solid;
+  border-image:linear-gradient(to bottom, red, pink, white) 1;
+
+  transition:transform 1s ease;
 }
 
-/* Only peek slightly */
+/* After flap opens, letter peeks */
 .open .peek-letter{
-  transform:translate(-50%, -120px);
+  transform:translate(-50%, -110px);
 }
 
-/* Full letter */
+/* Full Letter */
 .full-letter{
   position:fixed;
   top:50%;
@@ -124,8 +129,10 @@ body{
   display:none;
   text-align:center;
   border-radius:20px;
+
   border:8px solid;
   border-image:linear-gradient(to bottom, red, pink, white) 1;
+
   box-shadow:0 15px 40px rgba(0,0,0,0.3);
 }
 
@@ -187,23 +194,31 @@ button{
 
 <script>
 
-/* Generate floating hearts */
-for(let i=0;i<25;i++){
+/* SPAWN HEARTS IMMEDIATELY */
+const heartColors=["red","#ff69b4","white"];
+
+for(let i=0;i<35;i++){
   let heart=document.createElement("div");
   heart.classList.add("heart");
   heart.innerHTML="❤";
   heart.style.left=Math.random()*100+"vw";
-  heart.style.fontSize=(Math.random()*25+15)+"px";
-  heart.style.animationDuration=(Math.random()*10+8)+"s";
+  heart.style.fontSize=(Math.random()*30+15)+"px";
+  heart.style.color=heartColors[Math.floor(Math.random()*3)];
+  heart.style.animationDuration=(Math.random()*8+6)+"s";
   document.body.appendChild(heart);
 }
 
-/* Open envelope */
+/* Envelope click */
+let opened=false;
+
 document.getElementById("mailBox").onclick=function(){
-  this.classList.add("open");
+  if(!opened){
+    this.classList.add("open");
+    opened=true;
+  }
 }
 
-/* Click peek letter */
+/* Click peeking letter */
 document.getElementById("peekLetter").onclick=function(e){
   e.stopPropagation();
   document.getElementById("fullLetter").style.display="block";
