@@ -6,27 +6,51 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
+
+/* Background with floating hearts */
 body {
   margin:0;
-  background:#f8c8dc;
+  overflow:hidden;
+  height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
   font-family:Arial, sans-serif;
-  overflow:hidden;
+  background:#f8c8dc;
 }
 
+/* Animated floating hearts */
+body::before {
+  content:"";
+  position:fixed;
+  width:200%;
+  height:200%;
+  background-image:
+    radial-gradient(red 3px, transparent 4px),
+    radial-gradient(#ff4d6d 4px, transparent 5px),
+    radial-gradient(pink 2px, transparent 3px);
+  background-size: 120px 120px, 200px 200px, 150px 150px;
+  animation: floatHearts 20s linear infinite;
+  opacity:0.4;
+}
+
+@keyframes floatHearts {
+  from { transform: translateY(0); }
+  to { transform: translateY(-300px); }
+}
+
+/* Mail container */
 .mail-container {
   position:relative;
   cursor:pointer;
 }
 
+/* MAIL ICON 3X BIGGER */
 .mail {
-  width:150px;
-  height:100px;
+  width:450px;
+  height:300px;
   background:white;
-  border-radius:10px;
+  border-radius:20px;
   position:relative;
   transition:0.5s;
 }
@@ -42,62 +66,79 @@ body {
   clip-path:polygon(0 0, 50% 100%, 100% 0);
 }
 
+/* Notification badge */
 .badge {
   position:absolute;
-  top:-10px;
-  right:-10px;
+  top:-20px;
+  right:-20px;
   background:red;
   color:white;
-  width:25px;
-  height:25px;
+  width:60px;
+  height:60px;
   border-radius:50%;
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:14px;
+  font-size:30px;
   font-weight:bold;
 }
 
+/* Small letter sliding out */
 .letter {
   position:absolute;
-  top:20px;
-  left:10px;
-  width:130px;
-  height:80px;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:400px;
+  height:250px;
   background:white;
-  padding:10px;
-  display:none;
-  border-radius:5px;
-  box-shadow:0 5px 10px rgba(0,0,0,0.2);
-  cursor:pointer;
+  border-radius:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:20px;
+  font-weight:bold;
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
+  transition:transform 1s ease;
+  transform:translate(-50%, 100%);
 }
 
+.open .letter {
+  transform:translate(-50%, -180px);
+}
+
+/* Full letter view */
 .full-letter {
   position:fixed;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
   width:80%;
-  max-width:500px;
+  max-width:600px;
   background:white;
-  padding:30px;
+  padding:40px;
   display:none;
   text-align:center;
-  border-radius:15px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+  border-radius:20px;
+
+  /* Gradient border */
+  border:8px solid;
+  border-image: linear-gradient(to bottom, red, pink, white) 1;
+
+  box-shadow:0 15px 40px rgba(0,0,0,0.3);
 }
 
 button {
-  padding:10px 20px;
-  margin:15px;
-  font-size:16px;
+  padding:15px 30px;
+  margin:20px;
+  font-size:18px;
   cursor:pointer;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
 }
 
 #yesBtn {
-  background:#ff69b4;
+  background:#ff4d6d;
   color:white;
 }
 
@@ -106,17 +147,19 @@ button {
 }
 
 .bigText {
-  font-size:30px;
+  font-size:40px;
   font-weight:bold;
   color:#ff1493;
   display:none;
+  margin-top:20px;
 }
+
 </style>
 </head>
 
 <body>
 
-<div class="mail-container" onclick="openMail()">
+<div class="mail-container" id="mailBox" onclick="openMail()">
   <div class="mail"></div>
   <div class="badge">1</div>
   <div class="letter" id="smallLetter">Open 💌</div>
@@ -124,14 +167,13 @@ button {
 
 <div class="full-letter" id="fullLetter">
   <p>
-  heyy mrembo, its felt like a dream come true to meet and get to know you the couple months.
-  Words cant describe how happy I am to have u in my life and get to spend time with you
-  (we used to pray for times like these).
-  <br><br>
+  <strong>Heyy Mrembo,</strong><br><br>
+  Words can describe how happy I am to have u in my life and get to spend time with you
+  (I used to pray for times like these).<br><br>
   Speaking of time, valentines is coming up and I have one question for you....
   </p>
 
-  <h2>Will you be my Valentine?</h2>
+  <h1>Will you be my valentine?</h1>
 
   <button id="yesBtn" onclick="sayYes()">Yes</button>
   <button id="noBtn" onmouseover="moveNo()">No</button>
@@ -142,30 +184,33 @@ button {
 </div>
 
 <script>
+
 function openMail(){
-  document.getElementById("smallLetter").style.display="block";
+  document.getElementById("mailBox").classList.add("open");
 }
 
-document.getElementById("smallLetter").onclick=function(){
+document.getElementById("smallLetter").onclick=function(e){
+  e.stopPropagation();
   document.getElementById("fullLetter").style.display="block";
 }
 
 function moveNo(){
   const btn = document.getElementById("noBtn");
   btn.style.position="absolute";
-  btn.style.top=Math.random()*300+"px";
-  btn.style.left=Math.random()*300+"px";
+  btn.style.top=Math.random()*400+"px";
+  btn.style.left=Math.random()*400+"px";
 }
 
 function sayYes(){
   document.getElementById("celebrate").style.display="block";
 
   confetti({
-    particleCount: 150,
-    spread: 120,
-    origin: { y: 0.6 }
+    particleCount:200,
+    spread:120,
+    origin:{ y:0.5 }
   });
 }
+
 </script>
 
 </body>
